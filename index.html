@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fortune</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #1a002b, #000000);
+      font-family: 'Segoe UI', cursive, sans-serif;
+      color: #f0e6ff;
+      overflow: hidden;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      text-shadow: 0 0 15px #a084dc, 0 0 30px #7a5cf3;
+    }
+
+    #crystal-ball {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at 30% 30%, #7a5cf3, #3b1d6a);
+      border-radius: 50%;
+      box-shadow: 0 0 25px #a084dc, inset 0 0 40px #fff;
+      cursor: pointer;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    #crystal-ball::after {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      width: 30px;
+      height: 30px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      filter: blur(5px);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Paper */
+    #paper {
+      margin-top: 40px;
+      background: #fdfbf7;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      max-width: 320px;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #3b1d6a;
+      display: none;
+      animation: pop 0.5s ease forwards;
+    }
+
+    /* Big funny message */
+    #big-message {
+      margin-top: 40px;
+      background: #fff4d6;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(255,255,255,0.8);
+      max-width: 500px;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #2d1657;
+      display: none;
+      animation: pop 0.8s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Stars */
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Ask the Universe</h1>
+  <div id="crystal-ball" onclick="showMessage()"></div>
+  <div id="paper"></div>
+  <div id="big-message"></div>
+
+<script>
+  const messages = [
+    "Love will find you when you least expect it.",
+    "Trust the process, the universe is guiding you.",
+    "Your hard work in school will open magical doors.",
+    "The future is brighter than you think.",
+    "Be kind to yourself, healing takes time.",
+    "Growth is silent but powerful.",
+    "Transformation is coming your way.",
+    "Magic flows through your actions.",
+    "Your dreams are closer than they seem.",
+    "Life will soon take a joyful turn.",
+    "The universe says: eat the last slice, you deserve it.",
+    "Coffee will solve 80% of your problems today.",
+    "Stop refreshing your phone, the text will come eventually.",
+    "Money is coming… then immediately leaving for snacks.",
+    "You will binge-watch something tonight instead of being productive.",
+    "Tomorrow will bring wisdom… or just more laundry.",
+    "One day, your shower singing will be legendary.",
+    "Miss mo na? Miss ka ba?",
+    "Grabe, the universe feels like you're so pagod na — take a rest na, pls.",
+    "Hoy, manifesting ka nanaman? Chill lang, the vibes got you.",
+    "Parang traffic lang sa EDSA — tagal ng progress, pero moving pa rin.",
+    "Crush ka din niya… pero shy siya, swear.",
+    "If hindi ka niya nireply, maybe busy siya… or baka ML lang yan.",
+    "Lodi ka, pero minsan behave ka din, ok?",
+    "Universe says: ‘G ka ba later? Coffee tayo.’",
+    "Alam mo, kung exam yan, sana open notes din ang love life mo.",
+    "Universe vibes: wag ka nang marupok… pero up to u pa rin.",
+    "Huwag ka nang mag-stalk, parang ikaw lang napapagod.",
+    "Minsan ghost lang yan, hindi destiny.",
+    "Manifest responsibly, hindi yung kahit sa Shopee free shipping minamanifest mo.",
+    "Universe tip: wag lahat sa notes app, baka mabasa pa ni crush.",
+    "You’re not behind, you’re just on your own timeline.",
+    "Universe chika: may nagma-mindset ka daw habang tulog ka pa.",
+    "Hoy! Mag-water ka naman, hindi puro milk tea.",
+    "Ikaw lang ata ang manifestation na laging late.",
+    "Universe knows… lagi ka nag rereklamo pero ikaw din marupok.",
+    "Pwede bang wag lahat ng sagot i-Google? Tanong ka rin sa sarili mo.",
+    "Baka hindi ka lost, baka scenic route lang ‘to.",
+    "Someone is silently rooting for you — baka hindi lang obvious.",
+    "Universe lang nagsasabi nito: wag ka masyado clingy.",
+    "Sometimes the delay is the blessing.",
+    "Wag kang sad, baka hungry ka lang.",
+    "Manifest love, pero wag kalimutan i-manifest yung grades mo din.",
+    "Universe reminds you: kahit soft ka, strong ka pa rin.",
+    "Baka hindi ka ignored, baka muted ka lang… kidding, love ka pa rin.",
+    "Kaya pala hindi nagiging kayo… kasi siya gusto niya, ikaw gusto mo rin, pero Netflix first.",
+    "Hoy, wag ka na mag overthink — wala namang plot twist today.",
+    "Universe tip: wag mo i-compare sarili mo, iba naman script mo.",
+    "Kung hindi ikaw pinili, baka next scene ka pa. Chill lang.",
+    "Universe sees you grinding kahit walang audience.",
+    "Your kindness is your secret flex.",
+    "You are enough, kahit wala kang update sa IG ngayon.",
+    "Universe says: minsan accept mo na lang na hindi lahat gusto ka — normal lang yan.",
+    "Hindi ka napag-iiwanan, iba lang pacing mo.",
+    "Ang dami mong alam, pero wag lahat i-apply sa chismis.",
+    "Universe reminder: say thank you kahit sa small wins.",
+    "Hoy, wag ka nang magpuyat… unless libre mo ako milk tea bukas.",
+    "Hindi lahat ng ‘read’ is rejection — baka tulog lang siya.",
+    "Universe whispers: wag ka muna mag-online shopping, wait for sweldo.",
+    "Magtiwala ka, hindi lahat ng bagay kailangan sagutin agad.",
+    "Universe hack: minsan wag ka muna reply agad, mysterious points yun.",
+    "Huwag ka masyadong seryoso, kahit universe marunong din mag-joke.",
+    "Universe hint: baka saktong timing ka na next week.",
+    "Hoy, ang manifestation hindi effective kung tamad ka.",
+    "Yung iba, wrong timing lang talaga — hindi ikaw ang mali.",
+    "Universe: wag mo pilitin, masisira.",
+    "Kung toxic na, kahit stars ayaw na dyan.",
+    "Universe clue: baka hindi siya soulmate, baka seatmate lang.",
+    "Hoy, wag ka umiyak dahil sa kanya — hindi worth yung tissue.",
+    "The energy you give is the energy you’ll get back.",
+    "Universe vibes: baka busy siya sa sarili niyang healing.",
+    "Kung ayaw niya sayo, wag pilitin. Maraming iba dyan na marupok din.",
+    "Universe says: wag lahat ng heartbreak gawing playlist.",
+    "Hoy, ikaw yung lesson na hindi niya ma-move on.",
+    "Universe: minsan ikaw rin yung red flag, aminado ka na?",
+    "Huwag kang laging plan B ng ibang tao.",
+    "Universe secret: may nagmamahal sayo ng tahimik lang.",
+    "Hoy, wag ka na mag message ng 'kain na' — hindi love language yan.",
+    "Universe vibes: stay soft kahit harsh yung mundo.",
+    "Kung iniwan ka, baka universe lang nag-clear ng space.",
+    "Hoy, wag ka na maghintay ng closure — Netflix na lang.",
+    "Universe: you glow differently kapag happy ka.",
+    "Minsan kailangan mo lang matulog, hindi sign ng universe.",
+    "Hoy, wag ka masyado clingy sa past.",
+    "Universe says: hindi lahat ng crush mo, magiging crush back.",
+    "Kung hindi siya nag-e-effort, wag mo ipilit.",
+    "Hoy, wag ka na magtanong sa tarot reader ng paulit-ulit.",
+    "Universe tip: minsan, wala talagang deeper meaning — gutom ka lang.",
+    "Baka kailangan mo lang lumabas at magpaaraw.",
+    "Hoy, wag ka na magtago sa kwarto, kausap mo na sarili mo.",
+    "Universe says: wag mo ibigay lahat, leave something for yourself.",
+    "Kung hindi para sayo, kahit anong manifest hindi mangyayari.",
+    "Universe vibe: wag mo masyadong habulin yung hindi lumilingon.",
+    "Hoy, wag ka na magdouble text — desperate tingnan.",
+    "Universe hint: minsan slow mo muna, wag laging bilis.",
+    "Kung napapagod ka, okay lang huminto.",
+    "Universe: wag ka magmadali, hindi ito race.",
+    "Hoy, wag ka masyado invested sa taong hindi sure.",
+    "Universe vibe: minsan tahimik ang sagot.",
+    "Kung ini-ignore ka, that’s already an answer.",
+    "Hoy, wag ka laging late — universe is watching.",
+    "Universe hack: minsan lakad-lakad lang solves anxiety.",
+    "Kung walang reply, wag ka na magtanong, baka wala talaga.",
+    "Hoy, wag ka na magproject ng sarili mong fantasy sa kanya.",
+    "Universe vibe: wag masyadong mapressure, chill ka lang.",
+    "Hindi lahat ng silence, bad. Minsan peace lang yan.",
+    "Hoy, wag ka masyadong pushy — lalo lalayo yan.",
+    "Universe tip: minsan ikaw na lang muna piliin mo.",
+    "Kung ayaw ng universe, may better plan yan.",
+    "Hoy, wag ka na magpanggap, nakikita ka rin namin.",
+    "Universe says: wag ka matakot mag-start ulit.",
+    "Kung iniwan ka, better space for better people.",
+    "Hoy, wag ka na mag-stalk ng ex — bad for skin yan.",
+    "Universe vibes: hindi mo kailangan maging perfect para mahalin.",
+    "Kung hindi kanya-kanya, wag pilitin maging kayo.",
+    "Hoy, wag ka na maghintay sa wala.",
+    "Universe: minsan hindi pa siya ready, wag pilitin.",
+    "Kung ayaw niya sayo, hindi mo kasalanan.",
+    "Hoy, wag ka na mag-expect masyado.",
+    "Universe vibes: learn to detach, hindi lahat forever.",
+    "Kung hindi siya nagpapakita ng effort, believe the signs.",
+    "Hoy, wag ka na umasa sa ‘seen’ lang.",
+    "Universe says: wag mo masyado gawing serious ang small things.",
+    "Kung hindi siya consistent, wag mo i-justify.",
+    "Hoy, wag ka na magpanggap na okay ka — be real.",
+    "Universe: hindi lahat ng nakakatawa, nakakatuwa.",
+    "Kung napapagod ka na, rest is part of progress.",
+    "Hoy, wag ka laging busy excuse — may oras ka din.",
+    "Universe tip: wag lahat reply-an agad, leave mystery.",
+    "Kung hindi siya sure, wag ka mag-all in.",
+    "Hoy, wag ka na magtanong kung mahal ka niya — kita naman.",
+    "Universe: minsan silence ang pinaka loud na sagot."
+  ];
+
+    const bigFunnyMessages = [
+      "Kaya di ka pinipili… kasi 4th time mo na nagtatanong sa universe. ",
+      "The stars said: kaya di ka pinipili, kulit mo kasi besh. ",
+      "Hoy! Kaya di ka pinipili, kasi inuulit-ulit mo mga tanong mo. ",
+      "Universe note: Kaya di ka pinipili… kasi gusto ka turuan ng patience. ",
+      "Alam mo na sagot pero tanong ka pa rin — kaya di ka pinipili. "
+    ];
+
+    let clickCount = 0;
+
+    function showMessage() {
+      clickCount++;
+      const paper = document.getElementById("paper");
+      const bigMsg = document.getElementById("big-message");
+
+      paper.style.display = "none";
+      bigMsg.style.display = "none";
+
+      if (clickCount <= 3) {
+        const randomIndex = Math.floor(Math.random() * messages.length);
+        paper.textContent = messages[randomIndex];
+        paper.style.display = "block";
+
+       
+        paper.style.animation = "none";
+        paper.offsetHeight;
+        paper.style.animation = "pop 0.5s ease forwards";
+      } else if (clickCount === 4) {
+        const randomBig = Math.floor(Math.random() * bigFunnyMessages.length);
+        bigMsg.textContent = bigFunnyMessages[randomBig];
+        bigMsg.style.display = "block";
+
+     
+        bigMsg.style.animation = "none";
+        bigMsg.offsetHeight;
+        bigMsg.style.animation = "pop 0.8s ease forwards";
+      } else {
+     
+        bigMsg.textContent = "Wala na te, bahala ka jan finished na ang universe sa'yo.";
+        bigMsg.style.display = "block";
+      }
+    }
+
+    for (let i = 0; i < 60; i++) {
+      let star = document.createElement("div");
+      star.classList.add("star");
+      star.style.top = Math.random() * window.innerHeight + "px";
+      star.style.left = Math.random() * window.innerWidth + "px";
+      star.style.animationDuration = (Math.random() * 3 + 2) + "s";
+      document.body.appendChild(star);
+    }
+  </script>
+</body>
+</html>
